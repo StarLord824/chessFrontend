@@ -1,5 +1,5 @@
 import './App.css'
-import HeaderBar from './components/HeaderBar'
+// import HeaderBar from './components/HeaderBar'
 import LandingPage from './components/LandingPage'
 
 function App() {
