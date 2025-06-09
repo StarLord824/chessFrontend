@@ -1,3 +1,5 @@
+import { NavLink } from "react-router";
+
 const LandingPage = () => {
     const menuItems= [ "Home", "Play", "Settings", "About"]
   return (
@@ -10,10 +12,15 @@ const LandingPage = () => {
                         {item}
                     </li>
                 ))}
-                <li><button className='bg-lime-400 text-center w-30 mt-30 my-3 py-3 rounded-lg'>Log In</button>
+                <li>
+                    <NavLink to="/login">
+                        <button className='bg-lime-400 text-center w-30 mt-30 my-3 py-3 rounded-lg'>Log In</button>
+                    </NavLink>
                 </li>
                 <li>
-                <button className='bg-white text-neutral-700 text-center w-30 py-3 my-3 rounded-lg'>SignUp</button>
+                    <NavLink to="/signin">
+                        <button className='bg-white text-neutral-700 text-center w-30 py-3 my-3 rounded-lg'>SignUp</button>
+                    </NavLink>
                 </li>
             </ul>
         </div>
@@ -25,7 +32,9 @@ const LandingPage = () => {
                 <div className="flex flex-col gap-10 justify-center items-center w-1/5">
                     <div className='text-center text-white font-bold text-6xl'>Play Chess Online on the #1 Site!</div>
                     <div className="w-full bg">
-                        <button className='bg-lime-400 text-center w-full h-20 py-3 rounded-lg font-extrabold text-4xl text-white'>Play Online</button>
+                        <NavLink to="/match">
+                            <button className='bg-lime-400 text-center w-full h-20 py-3 rounded-lg font-extrabold text-4xl text-white'>Play Online</button>
+                        </NavLink>
                     </div>
                 </div>
             </div>
