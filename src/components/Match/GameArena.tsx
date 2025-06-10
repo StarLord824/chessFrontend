@@ -1,5 +1,6 @@
 import { Dispatch, RefObject, SetStateAction, useRef } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 // import {WebSocket} from 'ws';
 const GameArena = () => {
   // const [loading, setLoading] = useState("");
@@ -13,13 +14,21 @@ const GameArena = () => {
   //   }
   // }, []);
   const [matching, setMatching] = useState(false);
+  const [matched, setMatched] = useState(false);
   const socket = useRef<WebSocket>(new WebSocket('ws://localhost:8080'));
   socket.current.onopen = () => {
       console.log('WebSocket connection established');
       // ws.current.send(JSON.stringify({ message: 'Hello Server!' }));
   };
   socket.current.onmessage = (event) => {
-    console.log(event.data);
+    const data = JSON.parse(event.data);
+
+    if(data.message)
+      console.log(data.message);
+    
+    if (data.type === "GameStarted") {
+      setMatched(true);
+    }
   };
   socket.current.onclose = () => {
     console.log('WebSocket connection closed');
@@ -28,11 +37,10 @@ const GameArena = () => {
     <div className="flex flex-col justify-center items-center h-screen w-screen bg-transparent">
       {/* <h1 className="text-white">hi</h1> */}
       {/* <Joining socket={socket} setMatching={setMatching}/> */}
-      { matching ? <Matching/> : <Joining socket={socket} setMatching={setMatching}/>}
+      { matching ? <Matching matched={matched}/> : <Joining socket={socket} setMatching={setMatching}/>}
     </div>
   )
 }
-
 
 interface JoiningProps {
   socket: RefObject<WebSocket>;
@@ -46,11 +54,10 @@ const Joining = ({ socket, setMatching }: JoiningProps) => {
       <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" className="text-center w-40 h-10 my-3 border-2 border-white active:border-2 rounded-lg px-3 py-2"/>
       <button onClick={() => {
         if (socket) {
-          console.log(name)
           socket.current.send(JSON.stringify({ type: "SetName", data: name }));
-          // name === "" ? setMatching(true) : setMatching(false);
+          setMatching(true);
+          socket.current.send(JSON.stringify( {type: "InitGame"} ) )
         }
-        setMatching(true);
       }}
       className="bg-white/50 flex justify-center items-center hover:bg-white/30 duration-150 text-center w-40 h-10 my-2 py-3 rounded-lg text-lg"
       >SetName</button>
@@ -58,7 +65,16 @@ const Joining = ({ socket, setMatching }: JoiningProps) => {
   )
 }
 
-const Matching = ()=>{
+// interface MatchingProps {
+//   matched: boolean;
+// }
+
+const Matching = ({ matched }: {matched : boolean}) => {
+  const navigate = useNavigate();
+
+  if (matched)
+    navigate("/arena");
+
   return (
     <div className='flex flex-col space-x-2 h-full w-full justify-center items-center gap-1 dark:invert'>
       {/* <span className='sr-only'>Loading...</span> */}

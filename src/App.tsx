@@ -4,6 +4,7 @@ import LandingPage from './components/Landing/LandingPage'
 import GameArena from './components/Match/GameArena'
 import LoginPage from './components/Login/LoginPage'
 import SigninPage from './components/Login/SigninPage'
+import { Arena } from './components/Match/Arena'
 
 function App() {
 
@@ -26,9 +27,10 @@ function App() {
             </div>
         <Routes>
           <Route path="/" element={<LandingPage/>}/>
-          <Route path="match" element={<GameArena/>}/>
-          <Route path="login" element={<LoginPage/>}/>
-          <Route path="signin" element={<SigninPage/>}/>
+          <Route path="/match" element={<GameArena/>}/>
+          <Route path="/login" element={<LoginPage/>}/>
+          <Route path="/signin" element={<SigninPage/>}/>
+          <Route path="/arena" element={<Arena/>}/>
         </Routes>
       </Router>
     </>
