@@ -5,6 +5,8 @@ import GameArena from './components/Match/GameArena'
 import LoginPage from './components/Login/LoginPage'
 import SigninPage from './components/Login/SigninPage'
 import { Arena } from './components/Match/Arena'
+import { HeroSection } from './components/Landing/HeroSection'
+import { About } from './components/Landing/About'
 
 function App() {
 
@@ -27,10 +29,13 @@ function App() {
             </div>
         <Routes>
           <Route path="/" element={<LandingPage/>}/>
+          <Route path="/home" element={<HeroSection/>}/>
           <Route path="/match" element={<GameArena/>}/>
           <Route path="/login" element={<LoginPage/>}/>
           <Route path="/signin" element={<SigninPage/>}/>
           <Route path="/arena" element={<Arena/>}/>
+          {/* <Route path="/settings" element={<Settings/>}/> */}
+          <Route path="/about" element={<About/>}/>
         </Routes>
       </Router>
     </>
