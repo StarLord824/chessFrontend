@@ -12,7 +12,7 @@ const LandingPage = () => {
             <h1 className='text-4xl m-4 p-4 border-b-2 border-neutral-600 rounded-lg'>Chess.com</h1>
             <ul>
                 {menuItems.map((item, index) => (
-                    <li key={index} className=' group text-xl p-4 hover:bg-neutral-700 cursor-pointer border-b-2 border-neutral-600 w-full text-center rounded-sm '>
+                    <li key={index} className=' group text-xl p-4 hover:bg-neutral-700 duration-75 cursor-pointer border-b-2 border-neutral-600 w-full text-center rounded-sm my-1'>
                         <NavLink to={item.value} className="text-white group-hover:text-lime-400">
                             {item.attribute}
                         </NavLink>
@@ -20,7 +20,7 @@ const LandingPage = () => {
                 ))}
                 <li>
                     <NavLink to="/login" className='group'>
-                        <button className='bg-lime-500 group-hover:bg-lime-600 duration-100 text-center w-30 mt-30 my-3 py-3 rounded-lg'>Log In</button>
+                        <button className='bg-lime-500 group-hover:bg-lime-600 duration-150 text-center w-30 h-12 mt-30 my-3 py-3 rounded-lg'>Log In</button>
                     </NavLink>
                 </li>
                 <li>
@@ -39,7 +39,7 @@ const LandingPage = () => {
                     <div className='text-center text-white font-bold text-6xl'>Play Chess Online on the #1 Site!</div>
                     <div className="group w-full bg">
                         <NavLink to="/match">
-                            <button className='bg-lime-500 group-hover:bg-lime-600 group-hover:text-3xl duration-100 text-center w-full h-20 py-3 rounded-lg font-extrabold text-4xl text-white'>Play Online</button>
+                            <button className='bg-lime-500 group-hover:bg-lime-600 group-hover:text-3xl duration-200 text-center w-full h-20 py-3 rounded-lg font-extrabold text-4xl text-white'>Play Online</button>
                         </NavLink>
                     </div>
                 </div>

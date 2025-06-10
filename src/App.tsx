@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <Router>
-        <div className="absolute area">
+        <div className="absolute area h-screen w-screen">
             <ul className="circles">
             <li></li>
             <li></li>
