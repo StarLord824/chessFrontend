@@ -15,7 +15,7 @@ const GameArena = () => {
   // }, []);
   const [matching, setMatching] = useState(false);
   const [matched, setMatched] = useState(false);
-  const socket = useRef<WebSocket>(new WebSocket('ws://localhost:8080'));
+  const socket = useRef<WebSocket>(new WebSocket('ws://localhost:3000'));
   socket.current.onopen = () => {
       console.log('WebSocket connection established');
       // ws.current.send(JSON.stringify({ message: 'Hello Server!' }));
