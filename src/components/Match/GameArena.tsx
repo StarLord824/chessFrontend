@@ -15,11 +15,14 @@ const GameArena = () => {
   // }, []);
   const [matching, setMatching] = useState(false);
   const [matched, setMatched] = useState(false);
-  const socket = useRef<WebSocket>(new WebSocket('ws://chessbackend-vd6d.onrender.com/3000'));
+  // const socket = useRef<WebSocket>(new WebSocket('ws://chessbackend-vd6d.onrender.com/3000'));
+  const socket = useRef<WebSocket>(new WebSocket('ws://localhost:3000'));
+
   socket.current.onopen = () => {
       console.log('WebSocket connection established');
       // ws.current.send(JSON.stringify({ message: 'Hello Server!' }));
   };
+  
   socket.current.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
@@ -49,16 +52,24 @@ interface JoiningProps {
 
 const Joining = ({ socket, setMatching }: JoiningProps) => {
   const [name, setName] = useState("");
-  return (
-    <div className="h-1/3 w-1/4 flex flex-col justify-center items-center bg-white/5 text-white font-bold rounded-4xl">
-      <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" className="text-center w-40 h-10 my-3 border-2 border-white active:border-2 rounded-lg px-3 py-2"/>
-      <button onClick={() => {
+  
+  const handleClick = () => {
         if (socket) {
           socket.current.send(JSON.stringify({ type: "SetName", data: name }));
           setMatching(true);
           socket.current.send(JSON.stringify( {type: "InitGame"} ) )
         }
-      }}
+      }
+
+  return (
+    <div className="h-1/3 w-1/4 flex flex-col justify-center items-center bg-white/5 text-white font-bold rounded-4xl">
+      <input type="text" value={name} onKeyDown={(event) => {
+    if (event.key === 'Enter') {
+      // Trigger the button click
+      handleClick();
+    }
+  }} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" className="text-center w-40 h-10 my-3 border-2 border-white active:border-2 rounded-lg px-3 py-2"/>
+      <button onClick={handleClick}
       className="bg-white/50 flex justify-center items-center hover:bg-white/30 duration-150 text-center w-40 h-10 my-2 py-3 rounded-lg text-lg"
       >SetName</button>
     </div>

@@ -1,13 +1,37 @@
-// import { HeaderBar } from "../Login/HeaderBar";
-
 import { CiFlag1 } from "react-icons/ci"
 import { FaBrain, FaEye, FaHandHoldingHeart } from "react-icons/fa"
 import { IoIosSettings, IoIosTimer } from "react-icons/io"
 import { TbSend } from "react-icons/tb"
+import { Chess } from 'chess.js'
+import { useState } from "react"
 
 
 export const Arena = () => {
   
+    const chess = new Chess();
+    const [clicked, setClicked] = useState(false);
+    const [fen, setFen] = useState(chess.fen());
+    const pieceMap = {R: '♜', N: '♞', B: '♝', Q: '♛', K: '♚', P: '♟', r: '♖', n: '♘', b: '♗', q: '♕', k: '♔', p: '♙'};
+    chess.move('e4');
+    chess.move('d5');
+    const ChessBoard: string[][] = []
+    const board = chess.board();
+    for (let i = 0; i < 8; i++) {
+        const row = [];
+        for (let j = 0; j < 8; j++) {
+            const piece = board[i][j];
+            // console.log(piece?.square+" "+piece?.type+" "+piece?.color+" "+i+" "+j);
+            if (piece) {
+                row.push(piece.color === 'w' ? pieceMap[piece.type] : pieceMap[piece.type].toUpperCase());
+            } else {
+                row.push('');
+            }
+        }
+        ChessBoard.push(row);
+    }
+    // useEffect(() => {
+    //     //updates chessboard on fen change
+    // }, []);
   return (
     <div className="h-screen w-full flex flex-col justify-center items-center bg-white/5 text-white font-bold rounded-4xl">
 
@@ -56,13 +80,27 @@ export const Arena = () => {
 
             {/* <!-- Chessboard Container --> */}
           <div className="relative top-13">
-              {/* <!-- Coordinates --> */}
+              {/* <!-- Coordinates -->
               <div className="absolute -top-6 left-0 right-0 flex justify-between px-2 text-xs text-white/40">
-                  <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span>
+                  <div className="flex items-center">A</div>
+                  <span>B</span>
+                  <span>C</span>
+                  <span>D</span>
+                  <span>E</span>
+                  <span>F</span>
+                  <span>G</span>
+                  <span>H</span>
               </div>
               <div className="absolute top-0 -left-6 bottom-0 flex flex-col justify-between py-2 text-xs text-white/40">
-                  <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
-              </div>
+                  <span>8</span>
+                  <span>7</span>
+                  <span>6</span>
+                  <span>5</span>
+                  <span>4</span>
+                  <span>3</span>
+                  <span>2</span>
+                  <span>1</span>
+              </div> */}
               {/* <!-- Board --> */}
               <div id="board" className="grid grid-cols-8 sm:w-[420px] sm:h-[420px] lg:w-[540px] lg:h-[540px] aspect-square overflow-hidden bg-black/80 border border-white/20 shadow-md animate-fadeInUp duration-200">
                   {/* <!-- Squares --> */}
@@ -70,9 +108,22 @@ export const Arena = () => {
                       return Array.from({ length: 8 }).map((_, colIndex) => {
                           const isLightSquare = (rowIndex + colIndex) % 2 === 0;
                           return (
-                              <div key={`${rowIndex}-${colIndex}`} className={`w-full h-full flex items-center justify-center ${isLightSquare ? 'bg-white/10' : 'bg-black/20'}`}>
+                              <div key={`${rowIndex}-${colIndex}`} className={` group relative w-full h-full flex items-center justify-center 
+                               ${isLightSquare ? 'bg-white/10' : 'bg-black/20'} ${clicked && ChessBoard[rowIndex][colIndex] ? 'cursor-grab' : ''}`}>
                                   {/* <!-- Placeholder for piece --> */}
-                                  <span className="text-3xl text-white/30" id={`${String.fromCharCode(97+colIndex)}${8-rowIndex}`}>{String.fromCharCode(97+colIndex)}{8-rowIndex}</span>
+                                <div className="absolute z-0 bottom-1 right-1 text-xs text-white/20" id={`${String.fromCharCode(97+colIndex)}${8-rowIndex}`}>
+                                    {String.fromCharCode(97+colIndex)}{8-rowIndex}
+                                </div>
+                                <div className="absolute text-2xl">
+                                    {/* //render piece using fen */}
+                                    <button onClick={ (prev)=>{
+                                        console.log(clicked+" "+prev);
+                                        setClicked(!prev)
+                                    } } className="hover:cursor-grab">
+                                        {ChessBoard[rowIndex][colIndex]}
+                                    </button>
+                                    {/* {ChessBoard[rowIndex][colIndex]} */}
+                                </div>
                               </div>
                           );
                       });
@@ -102,9 +153,13 @@ export const Arena = () => {
               <div className="flex-1 overflow-y-auto">
                   <h3 className="text-xl text-center font-bold tracking-tight mb-2">Move History</h3>
                   <ol id="moveHistory" className="space-y-1 px-4 py-4 text-sm leading-relaxed">
+                      {/* <li>1. e4 …</li>
                       <li>1. e4 …</li>
-                      <li>1. e4 …</li>
-                      <li>1. e4 …</li>
+                      <li>1. e4 …</li> */}
+                      {chess.history().map((move, index) => {
+                          return <li key={index} className="text-center text-white text-xsm">{move}</li>
+                      })}
+                      {/* <li className="text-center text-white/20 text-xsm">your moves will appear here</li> */}
                   </ol>
             </div>
 
