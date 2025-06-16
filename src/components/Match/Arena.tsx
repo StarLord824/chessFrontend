@@ -10,7 +10,7 @@ export const Arena = () => {
   
     const chess = new Chess();
     const [clicked, setClicked] = useState(false);
-    const [fen, setFen] = useState(chess.fen());
+    // const [fen, setFen] = useState(chess.fen());
     const pieceMap = {R: '♜', N: '♞', B: '♝', Q: '♛', K: '♚', P: '♟', r: '♖', n: '♘', b: '♗', q: '♕', k: '♔', p: '♙'};
     chess.move('e4');
     chess.move('d5');
