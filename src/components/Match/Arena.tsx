@@ -3,32 +3,13 @@ import { FaBrain, FaEye, FaHandHoldingHeart } from "react-icons/fa"
 import { IoIosSettings, IoIosTimer } from "react-icons/io"
 import { TbSend } from "react-icons/tb"
 import { Chess } from 'chess.js'
-import { useState } from "react"
+import { ChessBoard } from "./ChessBoard"
 
 
 export const Arena = () => {
   
     const chess = new Chess();
-    const [clicked, setClicked] = useState(false);
-    // const [fen, setFen] = useState(chess.fen());
-    const pieceMap = {R: '♜', N: '♞', B: '♝', Q: '♛', K: '♚', P: '♟', r: '♖', n: '♘', b: '♗', q: '♕', k: '♔', p: '♙'};
-    chess.move('e4');
-    chess.move('d5');
-    const ChessBoard: string[][] = []
-    const board = chess.board();
-    for (let i = 0; i < 8; i++) {
-        const row = [];
-        for (let j = 0; j < 8; j++) {
-            const piece = board[i][j];
-            // console.log(piece?.square+" "+piece?.type+" "+piece?.color+" "+i+" "+j);
-            if (piece) {
-                row.push(piece.color === 'w' ? pieceMap[piece.type] : pieceMap[piece.type].toUpperCase());
-            } else {
-                row.push('');
-            }
-        }
-        ChessBoard.push(row);
-    }
+    
     // useEffect(() => {
     //     //updates chessboard on fen change
     // }, []);
@@ -102,33 +83,7 @@ export const Arena = () => {
                   <span>1</span>
               </div> */}
               {/* <!-- Board --> */}
-              <div id="board" className="grid grid-cols-8 sm:w-[420px] sm:h-[420px] lg:w-[540px] lg:h-[540px] aspect-square overflow-hidden bg-black/80 border border-white/20 shadow-md animate-fadeInUp duration-200">
-                  {/* <!-- Squares --> */}
-                  {Array.from({ length: 8 }).map((_, rowIndex) => {
-                      return Array.from({ length: 8 }).map((_, colIndex) => {
-                          const isLightSquare = (rowIndex + colIndex) % 2 === 0;
-                          return (
-                              <div key={`${rowIndex}-${colIndex}`} className={` group relative w-full h-full flex items-center justify-center 
-                               ${isLightSquare ? 'bg-white/10' : 'bg-black/20'} ${clicked && ChessBoard[rowIndex][colIndex] ? 'cursor-grab' : ''}`}>
-                                  {/* <!-- Placeholder for piece --> */}
-                                <div className="absolute z-0 bottom-1 right-1 text-xs text-white/20" id={`${String.fromCharCode(97+colIndex)}${8-rowIndex}`}>
-                                    {String.fromCharCode(97+colIndex)}{8-rowIndex}
-                                </div>
-                                <div className="absolute text-2xl">
-                                    {/* //render piece using fen */}
-                                    <button onClick={ (prev)=>{
-                                        console.log(clicked+" "+prev);
-                                        setClicked(!prev)
-                                    } } className="hover:cursor-grab">
-                                        {ChessBoard[rowIndex][colIndex]}
-                                    </button>
-                                    {/* {ChessBoard[rowIndex][colIndex]} */}
-                                </div>
-                              </div>
-                          );
-                      });
-                  })}
-              </div>
+              <ChessBoard chess={chess}/>
           </div>
 
             {/* <!-- Local Player Panel --> */}
