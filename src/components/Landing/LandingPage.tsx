@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Home, Play, Settings, Info, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
-import { HeroSection } from "./HeroSection";
+import {HeroSection} from "./HeroSection";
+import { NavLink } from "react-router";
 
 const menuItems = [
   { attribute: "Home", value: "/home", icon: <Home className="w-5 h-5" /> },
@@ -10,22 +11,23 @@ const menuItems = [
 ];
 
 export default function LandingPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <Sidebar menuItems={menuItems} />
+      <Sidebar menuItems={menuItems} open={sidebarOpen} setOpen={setSidebarOpen} />
       {/* <div className="flex-1 p-8">
         <div className="text-white text-center">
           <h1 className="text-4xl font-bold mb-4">Welcome to MyChess</h1>
           <p className="text-slate-300">Your enhanced sidebar is ready!</p>
         </div>
       </div> */}
-      <HeroSection />
+      <HeroSection sidebarOpen={sidebarOpen} />
     </div>
   );
 }
 
-function Sidebar({ menuItems }: { menuItems: { attribute: string; value: string; icon: React.ReactElement }[] }) {
-  const [open, setOpen] = useState(true);
+function Sidebar( { menuItems, open, setOpen }: { menuItems: { attribute: string; value: string; icon: React.ReactElement }[]; open: boolean; setOpen: (open: boolean) => void; }) {
+  // const [open, setOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeItem, setActiveItem] = useState("/home");
 
@@ -34,6 +36,7 @@ function Sidebar({ menuItems }: { menuItems: { attribute: string; value: string;
       {/* Mobile Navbar */}
       <div className="md:hidden flex items-center justify-between bg-gradient-to-r from-slate-900 to-slate-800 p-4 border-b border-slate-700/50 backdrop-blur-sm">
         <button 
+          id="mobile-menu-button"
           onClick={() => setMobileOpen(true)}
           className="p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 transition-all duration-200 backdrop-blur-sm"
         >
@@ -103,14 +106,16 @@ function Sidebar({ menuItems }: { menuItems: { attribute: string; value: string;
               <div className="text-center space-y-2">
                 <div className="flex items-center justify-center gap-2 text-slate-400 text-xs">
                   <span>🏆</span>
-                  <span>Trusted by 100K+ players</span>
+                  <span>Trusted by 100+ players</span>
                 </div>
                 <div className="text-slate-500 text-xs">
-                  © 2024 MyChess. All rights reserved.
+                  © 2025 MyChess. No rights reserved.
                 </div>
                 <div className="flex items-center justify-center gap-1 text-slate-500 text-xs">
                   <span>Powered by</span>
-                  <span className="text-blue-400 font-medium">ChessEngine Pro</span>
+                  <span className="text-blue-400 font-medium">
+                    <a href='https://github.com/jhlywa/chess.js' target="_blank">Chess.JS Engine</a>
+                </span> 
                 </div>
               </div>
             ) : (
@@ -122,7 +127,7 @@ function Sidebar({ menuItems }: { menuItems: { attribute: string; value: string;
           </div>
 
           {/* Enhanced Auth Buttons */}
-          <div className="p-4 space-y-3 bg-gradient-to-t from-slate-800/50 to-transparent">
+          {open && <div className="p-4 space-y-3 bg-gradient-to-t from-slate-800/50 to-transparent">
             <button className={`
               w-full py-3 rounded-xl font-semibold transition-all duration-300 relative overflow-hidden
               bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800
@@ -131,7 +136,7 @@ function Sidebar({ menuItems }: { menuItems: { attribute: string; value: string;
               ${!open && 'px-0'}
             `}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700"></div>
-              <span className="relative z-10">{open ? "Login" : "L"}</span>
+              <span className="relative z-10">Login</span>
             </button>
             <button className={`
               w-full py-3 rounded-xl font-semibold transition-all duration-300 relative overflow-hidden
@@ -142,9 +147,9 @@ function Sidebar({ menuItems }: { menuItems: { attribute: string; value: string;
               ${!open && 'px-0'}
             `}>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700"></div>
-              <span className="relative z-10">{open ? "Sign Up" : "S"}</span>
+              <span className="relative z-10">Sign Up</span>
             </button>
-          </div>
+          </div>}
         </div>
       </div>
 
@@ -218,10 +223,10 @@ function Sidebar({ menuItems }: { menuItems: { attribute: string; value: string;
 
           {/* Enhanced Auth Buttons */}
           <div className="p-6 space-y-3 bg-gradient-to-t from-slate-800/30 to-transparent">
-            <button className="w-full py-3 rounded-xl font-semibold transition-all duration-300 relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl hover:shadow-blue-500/20 transform hover:scale-105 hover:-translate-y-0.5">
+            <div className="w-full py-3 rounded-xl font-semibold transition-all duration-300 relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl hover:shadow-blue-500/20 transform hover:scale-105 hover:-translate-y-0.5">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700"></div>
               <span className="relative z-10">Login</span>
-            </button>
+            </div>
             <button className="w-full py-3 rounded-xl font-semibold transition-all duration-300 relative overflow-hidden bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white border border-slate-600 hover:border-slate-500 shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-0.5">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700"></div>
               <span className="relative z-10">Sign Up</span>
@@ -255,7 +260,8 @@ function NavItem({
   onClick: () => void;
 }) {
   return (
-    <button
+    <NavLink
+      to={item.value}
       onClick={onClick}
       className={`
         group relative flex items-center gap-4 px-4 py-3 rounded-xl text-base font-medium
@@ -296,6 +302,6 @@ function NavItem({
       
       {/* Hover effect background */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 -translate-x-full group-hover:translate-x-full"></div>
-    </button>
+    </NavLink>
   );
 }
