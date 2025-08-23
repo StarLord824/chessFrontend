@@ -14,7 +14,7 @@ function App() {
     <>
       <Router>
         <div className="absolute area h-screen w-screen">
-            <ul className="circles">
+          <ul className="circles">
             <li></li>
             <li></li>
             <li></li>
@@ -25,8 +25,8 @@ function App() {
             <li></li>
             <li></li>
             <li></li>
-            </ul>
-            </div>
+          </ul>
+        </div>
         <Routes>
           <Route path="/" element={<LandingPage/>}/>
           <Route path="/home" element={<HeroSection/>}/>
