@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { Home, Play, Settings, Info, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
-import {HeroSection} from "./HeroSection";
-import { NavLink } from "react-router";
+import { useState, useEffect } from "react";
+import { Home, Play, Settings, Info, ChevronLeft, ChevronRight, Menu, X, Users} from "lucide-react";
 
 const menuItems = [
   { attribute: "Home", value: "/home", icon: <Home className="w-5 h-5" /> },
@@ -12,22 +10,185 @@ const menuItems = [
 
 export default function LandingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <Sidebar menuItems={menuItems} open={sidebarOpen} setOpen={setSidebarOpen} />
-      {/* <div className="flex-1 p-8">
-        <div className="text-white text-center">
-          <h1 className="text-4xl font-bold mb-4">Welcome to MyChess</h1>
-          <p className="text-slate-300">Your enhanced sidebar is ready!</p>
-        </div>
-      </div> */}
       <HeroSection sidebarOpen={sidebarOpen} />
     </div>
   );
 }
 
-function Sidebar( { menuItems, open, setOpen }: { menuItems: { attribute: string; value: string; icon: React.ReactElement }[]; open: boolean; setOpen: (open: boolean) => void; }) {
-  // const [open, setOpen] = useState(true);
+function HeroSection({ sidebarOpen }: { sidebarOpen: boolean }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [statsCounter, setStatsCounter] = useState({ players: 0, games: 0, tournaments: 0 });
+
+  useEffect(() => {
+    setIsVisible(true);
+    
+    const interval = setInterval(() => {
+      setStatsCounter(prev => ({
+        players: prev.players < 50000 ? prev.players + 1250 : 50000,
+        games: prev.games < 12000000 ? prev.games + 300000 : 12000000,
+        tournaments: prev.tournaments < 2400 ? prev.tournaments + 60 : 2400
+      }));
+    }, 40);
+
+    setTimeout(() => clearInterval(interval), 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div 
+      className={`
+        flex-1 relative min-h-screen transition-all duration-300 ease-in-out
+        ${sidebarOpen ? 'md:ml-64' : 'md:ml-20'}
+        bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950
+      `}
+    >
+      {/* Minimal Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-blue-500/3 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-purple-500/3 rounded-full blur-3xl"></div>
+        
+        {/* Single subtle chess piece */}
+        <div className="absolute top-32 right-32 text-6xl text-white/[0.02] select-none">♛</div>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-8 lg:px-16">
+        <div className="max-w-6xl w-full">
+          
+          {/* Center-aligned content */}
+          <div className="text-center space-y-16">
+            
+            {/* Minimal Brand Badge */}
+            <div 
+              className={`
+                inline-flex items-center gap-2 bg-slate-900/40 backdrop-blur-sm 
+                border border-slate-800/50 text-slate-400 px-5 py-2 rounded-full text-sm
+                transform transition-all duration-1000 delay-200
+                ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}
+              `}
+            >
+              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
+              Chess Mastery Platform
+            </div>
+
+            {/* Clean Typography Hierarchy */}
+            <div 
+              className={`
+                space-y-8 transform transition-all duration-1000 delay-400
+                ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+              `}
+            >
+              <h1 className="text-6xl md:text-8xl lg:text-9xl font-extralight tracking-tight text-white/95 leading-none">
+                Chess
+              </h1>
+              
+              <div className="max-w-2xl mx-auto">
+                <p className="text-xl md:text-2xl text-slate-400 font-light leading-relaxed">
+                  Where strategy meets perfection.
+                </p>
+                <p className="text-lg text-slate-500 mt-4 font-light">
+                  Join thousands of players in the ultimate chess experience.
+                </p>
+              </div>
+            </div>
+
+            {/* Elegant Stats Grid */}
+            <div 
+              className={`
+                max-w-3xl mx-auto transform transition-all duration-1000 delay-600
+                ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}
+              `}
+            >
+              <div className="grid grid-cols-3 gap-12 py-12">
+                <div className="group cursor-default">
+                  <div className="text-4xl md:text-5xl font-extralight text-white/90 mb-2 group-hover:text-white transition-colors duration-300">
+                    {(statsCounter.players / 1000).toFixed(0)}K
+                  </div>
+                  <div className="text-slate-500 text-sm font-light uppercase tracking-widest">
+                    Players
+                  </div>
+                </div>
+                
+                <div className="group cursor-default">
+                  <div className="text-4xl md:text-5xl font-extralight text-white/90 mb-2 group-hover:text-white transition-colors duration-300">
+                    {(statsCounter.games / 1000000).toFixed(0)}M
+                  </div>
+                  <div className="text-slate-500 text-sm font-light uppercase tracking-widest">
+                    Games
+                  </div>
+                </div>
+                
+                <div className="group cursor-default">
+                  <div className="text-4xl md:text-5xl font-extralight text-white/90 mb-2 group-hover:text-white transition-colors duration-300">
+                    {(statsCounter.tournaments / 100).toFixed(0)}+
+                  </div>
+                  <div className="text-slate-500 text-sm font-light uppercase tracking-widest">
+                    Daily
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Sophisticated CTA */}
+            <div 
+              className={`
+                flex flex-col sm:flex-row gap-4 justify-center items-center
+                transform transition-all duration-1000 delay-800
+                ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}
+              `}
+            >
+              <button className="group relative px-10 py-4 bg-white text-slate-900 font-medium rounded-full hover:bg-slate-50 transition-all duration-300 shadow-lg hover:shadow-xl">
+                <div className="flex items-center gap-3">
+                  <Play className="w-5 h-5 group-hover:translate-x-0.5 transition-transform duration-300" />
+                  <span>Start Playing</span>
+                </div>
+              </button>
+
+              <button className="group px-10 py-4 border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white font-medium rounded-full transition-all duration-300">
+                <div className="flex items-center gap-3">
+                  <Users className="w-5 h-5 group-hover:scale-105 transition-transform duration-300" />
+                  <span>Join Community</span>
+                </div>
+              </button>
+            </div>
+
+            {/* Minimal Trust Indicators */}
+            <div 
+              className={`
+                flex items-center justify-center gap-12 pt-16 text-slate-600
+                transform transition-all duration-1000 delay-1000
+                ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}
+              `}
+            >
+              <div className="flex items-center gap-2 text-sm">
+                <div className="w-1 h-1 bg-slate-600 rounded-full"></div>
+                <span>FIDE Recognized</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <div className="w-1 h-1 bg-slate-600 rounded-full"></div>
+                <span>Real-time Analysis</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <div className="w-1 h-1 bg-slate-600 rounded-full"></div>
+                <span>Global Tournaments</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Sidebar({ menuItems, open, setOpen }: { 
+  menuItems: { attribute: string; value: string; icon: React.ReactElement }[]; 
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeItem, setActiveItem] = useState("/home");
 
@@ -36,7 +197,6 @@ function Sidebar( { menuItems, open, setOpen }: { menuItems: { attribute: string
       {/* Mobile Navbar */}
       <div className="md:hidden flex items-center justify-between bg-gradient-to-r from-slate-900 to-slate-800 p-4 border-b border-slate-700/50 backdrop-blur-sm">
         <button 
-          id="mobile-menu-button"
           onClick={() => setMobileOpen(true)}
           className="p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 transition-all duration-200 backdrop-blur-sm"
         >
@@ -98,58 +258,54 @@ function Sidebar( { menuItems, open, setOpen }: { menuItems: { attribute: string
           ))}
         </nav>
 
-        {/* Company Info & Branding */}
-        <div className="mt-auto">
-          {/* Trademark/Company Info */}
-          <div className={`px-4 py-3 border-t border-slate-700/50 ${!open && 'px-2'}`}>
-            {open ? (
-              <div className="text-center space-y-2">
-                <div className="flex items-center justify-center gap-2 text-slate-400 text-xs">
-                  <span>🏆</span>
-                  <span>Trusted by 100+ players</span>
-                </div>
-                <div className="text-slate-500 text-xs">
-                  © 2025 MyChess. No rights reserved.
-                </div>
-                <div className="flex items-center justify-center gap-1 text-slate-500 text-xs">
-                  <span>Powered by</span>
-                  <span className="text-blue-400 font-medium">
-                    <a href='https://github.com/jhlywa/chess.js' target="_blank">Chess.JS Engine</a>
-                </span> 
-                </div>
+        {/* Company Info & Trademark */}
+        <div className={`mt-auto ${open ? 'px-4 pt-4 pb-2' : 'px-2 pt-4 pb-2'} border-t border-slate-700/50`}>
+          {open ? (
+            <div className="text-center space-y-2 mb-4">
+              <div className="flex items-center justify-center gap-2 text-slate-400">
+                <div className="text-lg">♟</div>
+                <span className="text-xs font-medium">GRANDMASTER EDITION</span>
               </div>
-            ) : (
-              <div className="text-center">
-                <div className="text-lg mb-1">🏆</div>
-                <div className="text-slate-500 text-xs">©2024</div>
+              <div className="text-xs text-slate-500 leading-relaxed">
+                © 2025 MyChess™<br />
+                <span className="text-slate-600">World's #1 Chess Platform</span>
               </div>
-            )}
-          </div>
-
+              <div className="flex justify-center gap-1 text-xs text-slate-600">
+                <span>⭐</span>
+                <span>50M+ Players</span>
+                <span>⭐</span>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center mb-4">
+              <div className="text-xs text-slate-500 transform -rotate-90 whitespace-nowrap">
+                © 2025
+              </div>
+            </div>
+          )}
+          
           {/* Enhanced Auth Buttons */}
-          {open && <div className="p-4 space-y-3 bg-gradient-to-t from-slate-800/50 to-transparent">
+          <div className="space-y-3">
             <button className={`
-              w-full py-3 rounded-xl font-semibold transition-all duration-300 relative overflow-hidden
+              w-full py-3 rounded-xl font-semibold transition-all duration-300
               bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800
               text-white shadow-lg hover:shadow-xl hover:shadow-blue-500/20
               transform hover:scale-105 hover:-translate-y-0.5
               ${!open && 'px-0'}
             `}>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700"></div>
-              <span className="relative z-10">Login</span>
+              {open ? "Login" : "L"}
             </button>
             <button className={`
-              w-full py-3 rounded-xl font-semibold transition-all duration-300 relative overflow-hidden
+              w-full py-3 rounded-xl font-semibold transition-all duration-300
               bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700
               text-white border border-slate-600 hover:border-slate-500
               shadow-lg hover:shadow-xl
               transform hover:scale-105 hover:-translate-y-0.5
               ${!open && 'px-0'}
             `}>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700"></div>
-              <span className="relative z-10">Sign Up</span>
+              {open ? "Sign Up" : "S"}
             </button>
-          </div>}
+          </div>
         </div>
       </div>
 
@@ -202,36 +358,14 @@ function Sidebar( { menuItems, open, setOpen }: { menuItems: { attribute: string
           ))}
         </nav>
 
-        {/* Company Info & Auth Section */}
-        <div className="mt-auto">
-          {/* Social Proof & Branding */}
-          <div className="p-6 border-t border-slate-700/50 space-y-3">
-            <div className="text-center space-y-2">
-              <div className="flex items-center justify-center gap-2 text-slate-300 text-sm">
-                <span className="text-yellow-400">⭐</span>
-                <span>4.8/5 rating • 100K+ players</span>
-              </div>
-              <div className="text-slate-500 text-xs">
-                © 2024 MyChess, Inc. All rights reserved.
-              </div>
-              <div className="flex items-center justify-center gap-2 text-slate-400 text-xs">
-                <span>🚀</span>
-                <span>Powered by ChessEngine Pro</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Enhanced Auth Buttons */}
-          <div className="p-6 space-y-3 bg-gradient-to-t from-slate-800/30 to-transparent">
-            <div className="w-full py-3 rounded-xl font-semibold transition-all duration-300 relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl hover:shadow-blue-500/20 transform hover:scale-105 hover:-translate-y-0.5">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700"></div>
-              <span className="relative z-10">Login</span>
-            </div>
-            <button className="w-full py-3 rounded-xl font-semibold transition-all duration-300 relative overflow-hidden bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white border border-slate-600 hover:border-slate-500 shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-0.5">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700"></div>
-              <span className="relative z-10">Sign Up</span>
-            </button>
-          </div>
+        {/* Mobile Auth Buttons */}
+        <div className="p-6 space-y-3 border-t border-slate-700/50">
+          <button className="w-full py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg">
+            Login
+          </button>
+          <button className="w-full py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white border border-slate-600">
+            Sign Up
+          </button>
         </div>
       </div>
 
@@ -260,8 +394,7 @@ function NavItem({
   onClick: () => void;
 }) {
   return (
-    <NavLink
-      to={item.value}
+    <button
       onClick={onClick}
       className={`
         group relative flex items-center gap-4 px-4 py-3 rounded-xl text-base font-medium
@@ -301,7 +434,7 @@ function NavItem({
       )}
       
       {/* Hover effect background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 -translate-x-full group-hover:translate-x-full"></div>
-    </NavLink>
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 -translate-x-full group-hover:translate-x-full transform"></div>
+    </button>
   );
 }

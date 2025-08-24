@@ -15,8 +15,8 @@ const GameArena = () => {
   // }, []);
   const [matching, setMatching] = useState(false);
   const [matched, setMatched] = useState(false);
-  // const socket = useRef<WebSocket>(new WebSocket('ws://chessbackend-vd6d.onrender.com/3000'));
-  const socket = useRef<WebSocket>(new WebSocket('ws://localhost:3000')); 
+  const Backend_URL = process.env.Backend_URL || "ws://localhost:3000";
+  const socket = useRef<WebSocket>(new WebSocket(Backend_URL));
 
   socket.current.onopen = () => {
       console.log('WebSocket connection established');

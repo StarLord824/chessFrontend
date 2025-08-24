@@ -13,23 +13,6 @@ function App() {
   return (
     <>
       <Router>
-        {/* <div className='absolute h-screen w-screen bg-yellow-50'>
-          hi
-        </div> */}
-        <div className="absolute area h-screen w-screen">
-          <ul className="circles">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-          </ul>
-        </div>
         <Routes>
           <Route path="/" element={<LandingPage/>}/>
           <Route path="/home" element={<HeroSection sidebarOpen={false}/>}/>
@@ -46,5 +29,3 @@ function App() {
 }
 
 export default App
-
-{/* <HeaderBar whitePlayer="Abhinav" blackPlayer="Aditya" time="00:00" /> */}
