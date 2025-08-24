@@ -1,7 +1,7 @@
 // components/Layout/Layout.tsx
 import React, { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { Home, Play, Settings, Info, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
+import { Home, Play, Settings, Info, ChevronLeft, ChevronRight, Menu, X, UserRoundPlus,UserCheck } from "lucide-react";
 
 const menuItems = [
   { attribute: "Home", value: "/", icon: <Home className="w-5 h-5" /> },
@@ -123,9 +123,9 @@ function Sidebar({
         </nav>
 
         {/* Company Info & Trademark */}
-        <div className={`mt-auto ${open ? 'px-4 pt-4 pb-2' : 'px-2 pt-4 pb-2'} border-t border-slate-700/50`}>
+        <div className={`mt-auto mb-3 ${open ? 'px-4 pt-4 pb-2' : 'px-2 pt-4 pb-2'} border-t border-slate-700/50`}>
           {open ? (
-            <div className="text-center space-y-2 mb-4">
+            <div className="text-center space-y-2 mb-8">
               <div className="flex items-center justify-center gap-2 text-slate-400">
                 <div className="text-lg">♟</div>
                 <span className="text-xs font-medium">GRANDMASTER EDITION</span>
@@ -141,7 +141,7 @@ function Sidebar({
               </div>
             </div>
           ) : (
-            <div className="text-center mb-4">
+            <div className="text-center mb-8 mt-4">
               <div className="text-xs text-slate-500 transform -rotate-90 whitespace-nowrap">
                 © 2025
               </div>
@@ -159,7 +159,7 @@ function Sidebar({
             `}
               onClick={() => navigate("/signin")}
             >
-              {open ? "Login" : "L"}
+              {open ? "Login" : <UserCheck className="mx-auto"/>}
             </button>
             <button className={`
               w-full py-3 rounded-xl font-semibold transition-all duration-300
@@ -171,7 +171,7 @@ function Sidebar({
             `}
               onClick={() => navigate("/signup")}
             >
-              {open ? "Sign Up" : "S"}
+              {open ? "Sign Up" : <UserRoundPlus className="mx-auto"/>}
             </button>
           </div>
         </div>

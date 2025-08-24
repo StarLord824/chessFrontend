@@ -1,7 +1,7 @@
 import { Play, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export function HeroSection({ sidebarOpen }: { sidebarOpen: boolean }) {
+export default function HeroSection({ navigate }: { navigate: (path: string) => void }) {
   const [isVisible, setIsVisible] = useState(false);
   const [statsCounter, setStatsCounter] = useState({ players: 0, games: 0, tournaments: 0 });
 
@@ -21,14 +21,8 @@ export function HeroSection({ sidebarOpen }: { sidebarOpen: boolean }) {
   }, []);
 
   return (
-    <div 
-      className={`
-        flex-1 relative min-h-screen transition-all duration-300 ease-in-out
-        ${sidebarOpen ? 'md:ml-64' : 'md:ml-20'}
-        bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950
-      `}
-    >
-      {/* Minimal Background Elements */}
+    <div className="relative min-h-screen">
+      {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-blue-500/3 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-purple-500/3 rounded-full blur-3xl"></div>
@@ -123,7 +117,9 @@ export function HeroSection({ sidebarOpen }: { sidebarOpen: boolean }) {
                 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}
               `}
             >
-              <button className="group relative px-10 py-4 bg-white text-slate-900 font-medium rounded-full hover:bg-slate-50 transition-all duration-300 shadow-lg hover:shadow-xl">
+              <button className="group relative px-10 py-4 bg-white text-slate-900 font-medium rounded-full hover:bg-slate-50 transition-all duration-300 shadow-lg hover:shadow-xl"
+                onClick={() => navigate("/match")}
+              >
                 <div className="flex items-center gap-3">
                   <Play className="w-5 h-5 group-hover:translate-x-0.5 transition-transform duration-300" />
                   <span>Start Playing</span>
@@ -165,4 +161,3 @@ export function HeroSection({ sidebarOpen }: { sidebarOpen: boolean }) {
     </div>
   );
 }
-
