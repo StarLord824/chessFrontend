@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft, Play } from "lucide-react";
 
 export default function LoginPage() {
@@ -16,7 +17,8 @@ export default function LoginPage() {
       [name]: value
     }));
   };
-
+  const navigate = useNavigate();
+  
   const handleSubmit = async () => {
     setIsLoading(true);
     
@@ -202,7 +204,9 @@ export default function LoginPage() {
           <div className="text-center pt-4">
             <p className="text-white/60 font-light">
               Don't have an account?{" "}
-              <button className="text-white hover:text-white/80 font-normal transition-colors duration-200">
+              <button className="text-white hover:text-white/80 font-normal transition-colors duration-200"
+                onClick={() => navigate("/signup")}
+              >
                 Create one
               </button>
             </p>

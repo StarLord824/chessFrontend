@@ -1,27 +1,31 @@
+// App.tsx
 import './App.css'
 import { Route, BrowserRouter as Router, Routes } from 'react-router'
 import LandingPage from './components/Landing/LandingPage'
-import { HeroSection } from './components/Landing/HeroSection'
 import GameArena from './components/Match/GameArena'
-import LoginPage from './components/Login/LoginPage'
-import SigninPage from './components/Login/SigninPage'
 import { Arena } from './components/Match/Arena'
 import { About } from './components/Landing/About'
+import Signup from './components/Auth/Signup'
+import Login from './components/Auth/Login'
+import Layout from './components/Layout/Layout'
 
 function App() {
-
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<LandingPage/>}/>
-          <Route path="/home" element={<HeroSection sidebarOpen={false}/>}/>
-          <Route path="/match" element={<GameArena/>}/>
-          <Route path="/login" element={<LoginPage/>}/>
-          <Route path="/signin" element={<SigninPage/>}/>
-          <Route path="/arena" element={<Arena/>}/>
-          {/* <Route path="/settings" element={<Settings/>}/> */}
-          <Route path="/about" element={<About/>}/>
+          {/* Auth routes without sidebar */}
+          <Route path="/signin" element={<Login/>}/>
+          <Route path="/signup" element={<Signup/>}/>
+          
+          {/* Routes with sidebar layout */}
+          <Route path="/*" element={<Layout />}>
+            <Route index element={<LandingPage/>}/>
+            <Route path="match" element={<GameArena/>}/>
+            <Route path="arena" element={<Arena/>}/>
+            <Route path="about" element={<About/>}/>
+            {/* Add more routes here as needed */}
+          </Route>
         </Routes>
       </Router>
     </>

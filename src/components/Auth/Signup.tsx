@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,6 +13,7 @@ export default function SignupPage() {
     confirmPassword: ""
   });
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -272,7 +274,9 @@ export default function SignupPage() {
           <div className="text-center pt-4">
             <p className="text-white/60 font-light">
               Already have an account?{" "}
-              <button className="text-white hover:text-white/80 font-normal transition-colors duration-200">
+              <button className="text-white hover:text-white/80 font-normal transition-colors duration-200"
+                onClick={() => navigate("/signin")}
+              >
                 Sign in
               </button>
             </p>
