@@ -22,12 +22,13 @@ function App() {
           {/* Routes with sidebar layout */}
           <Route path="/*" element={<Layout />}>
             <Route index element={<LandingPage/>}/>
+            <Route path="home" element={<Home/>}/>
             <Route path="dashboard" element={<Home/>}/>
             <Route path="match" element={<GameArena/>}/>
-            <Route path="arena" element={<Arena/>}/>
             <Route path="about" element={<About/>}/>
             {/* Add more routes here as needed */}
           </Route>
+          <Route path="/arena" element={<Arena/>}/>
         </Routes>
       </Router>
     </>

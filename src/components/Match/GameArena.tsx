@@ -1,104 +1,245 @@
-import { Dispatch, RefObject, SetStateAction, useRef } from "react";
-import { useState } from "react";
-import { useNavigate } from "react-router";
-// import {WebSocket} from 'ws';
-const GameArena = () => {
-  // const [loading, setLoading] = useState("");
-  // const text= "Searching for an opponent";
-  // // useEffect(() => {
-  //   for(let j = 0; j < text.length; j++) {
-  //     const char = text[j];
-  //     awai rtsetTimeout(() => {
-  //       setLoading(prev => prev + char);
-  //     }, 1000);
-  //   }
-  // }, []);
-  const [matching, setMatching] = useState(false);
-  const [matched, setMatched] = useState(false);
-  const Backend_URL = process.env.Backend_URL || "ws://localhost:3000";
-  const socket = useRef<WebSocket>(new WebSocket(Backend_URL));
+import { useState, useEffect } from 'react';
+import { 
+  Clock, 
+  Users, 
+  Settings, 
+  Play, 
+  X,
+  Zap,
+  Target,
+  Crown,
+  Timer
+} from 'lucide-react';
 
-  socket.current.onopen = () => {
-      console.log('WebSocket connection established');
-      // ws.current.send(JSON.stringify({ message: 'Hello Server!' }));
-  };
-  
-  socket.current.onmessage = (event) => {
-    const data = JSON.parse(event.data);
+export default function GameArena() {
+  const [selectedTimeControl, setSelectedTimeControl] = useState('10+0');
+  const [selectedRating, setSelectedRating] = useState('any');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchTime, setSearchTime] = useState(0);
+  const [playersOnline, setPlayersOnline] = useState(1247);
 
-    if(data.message)
-      console.log(data.message);
+  const timeControls = [
+    { id: '1+0', label: '1 min', type: 'Bullet', icon: <Zap className="w-4 h-4" /> },
+    { id: '3+0', label: '3 min', type: 'Blitz', icon: <Zap className="w-4 h-4" /> },
+    { id: '5+0', label: '5 min', type: 'Blitz', icon: <Timer className="w-4 h-4" /> },
+    { id: '10+0', label: '10 min', type: 'Rapid', icon: <Target className="w-4 h-4" /> },
+    { id: '15+10', label: '15+10', type: 'Rapid', icon: <Target className="w-4 h-4" /> },
+    { id: '30+0', label: '30 min', type: 'Classical', icon: <Crown className="w-4 h-4" /> }
+  ];
+
+  const ratingRanges = [
+    { id: 'any', label: 'Any Rating', range: 'All players' },
+    { id: '1200-1400', label: '1200-1400', range: 'Beginner' },
+    { id: '1400-1600', label: '1400-1600', range: 'Intermediate' },
+    { id: '1600-1800', label: '1600-1800', range: 'Advanced' },
+    { id: '1800+', label: '1800+', range: 'Expert+' }
+  ];
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isSearching) {
+      interval = setInterval(() => {
+        setSearchTime(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isSearching]);
+
+  useEffect(() => {
+    const onlineInterval = setInterval(() => {
+      setPlayersOnline(prev => prev + Math.floor(Math.random() * 10 - 5));
+    }, 5000);
+    return () => clearInterval(onlineInterval);
+  }, []);
+
+  const handleStartSearch = () => {
+    setIsSearching(true);
+    setSearchTime(0);
     
-    if (data.type === "GameStarted") {
-      setMatched(true);
-    }
+    // Simulate finding a match after 3-8 seconds
+    const matchTime = Math.random() * 5000 + 3000;
+    setTimeout(() => {
+      // Navigate to arena (in real app, you'd use navigate('/arena'))
+      console.log('Match found! Redirecting to arena...');
+      setIsSearching(false);
+    }, matchTime);
   };
-  socket.current.onclose = () => {
-    console.log('WebSocket connection closed');
+
+  const handleCancelSearch = () => {
+    setIsSearching(false);
+    setSearchTime(0);
   };
-  return (
-    <div className="flex flex-col justify-center items-center h-screen w-screen bg-transparent">
-      {/* <h1 className="text-white">hi</h1> */}
-      {/* <Joining socket={socket} setMatching={setMatching}/> */}
-      { matching ? <Matching matched={matched}/> : <Joining socket={socket} setMatching={setMatching}/>}
-    </div>
-  )
-}
 
-interface JoiningProps {
-  socket: RefObject<WebSocket>;
-  setMatching: Dispatch<SetStateAction<boolean>>;
-}
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
-const Joining = ({ socket, setMatching }: JoiningProps) => {
-  const [name, setName] = useState("");
-  
-  const handleClick = () => {
-        if (socket) {
-          socket.current.send(JSON.stringify({ type: "SetName", data: name }));
-          setMatching(true);
-          socket.current.send(JSON.stringify( {type: "InitGame"} ) )
-        }
-      }
+  if (isSearching) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center space-y-8">
+          
+          {/* Searching Animation */}
+          <div className="relative">
+            <div className="w-32 h-32 mx-auto mb-6 relative">
+              <div className="absolute inset-0 border-4 border-blue-500/20 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
+              <div className="absolute inset-4 border-4 border-transparent border-t-emerald-500 rounded-full animate-spin animation-delay-150"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-4xl">⚔️</div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <h2 className="text-2xl font-light text-white">Finding opponent...</h2>
+              <p className="text-slate-400">Searching for {selectedTimeControl} • {selectedRating}</p>
+              <div className="text-lg font-mono text-blue-400">{formatTime(searchTime)}</div>
+            </div>
+          </div>
 
-  return (
-    <div className="h-1/3 w-1/4 flex flex-col justify-center items-center bg-white/5 text-white font-bold rounded-4xl">
-      <input type="text" value={name} onKeyDown={(event) => {
-    if (event.key === 'Enter') {
-      // Trigger the button click
-      handleClick();
-    }
-  }} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" className="text-center w-40 h-10 my-3 border-2 border-white active:border-2 rounded-lg px-3 py-2"/>
-      <button onClick={handleClick}
-      className="bg-white/50 flex justify-center items-center hover:bg-white/30 duration-150 text-center w-40 h-10 my-2 py-3 rounded-lg text-lg"
-      >SetName</button>
-    </div>
-  )
-}
+          {/* Search Stats */}
+          <div className="bg-slate-800/50 rounded-2xl p-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-slate-400">Players online</span>
+              <span className="text-emerald-400 font-medium">{playersOnline.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-slate-400">Time control</span>
+              <span className="text-white">{selectedTimeControl}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-slate-400">Rating range</span>
+              <span className="text-white">{selectedRating}</span>
+            </div>
+          </div>
 
-// interface MatchingProps {
-//   matched: boolean;
-// }
-
-const Matching = ({ matched }: {matched : boolean}) => {
-  const navigate = useNavigate();
-
-  if (matched)
-    navigate("/arena");
-
-  return (
-    <div className='flex flex-col space-x-2 h-full w-full justify-center items-center gap-1 dark:invert'>
-      {/* <span className='sr-only'>Loading...</span> */}
-      <div className="flex gap-3 justify-center items-center">
-        <div className="text-5xl font-extrabold pb-6 mx-4">Matching</div>
-        <div className='h-4 w-4 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
-        <div className='h-4 w-4 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'></div>
-        <div className='h-4 w-4 bg-black rounded-full animate-bounce'></div>
+          {/* Cancel Button */}
+          <button
+            onClick={handleCancelSearch}
+            className="w-full bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 rounded-xl py-3 px-6 font-medium transition-all duration-300 flex items-center justify-center gap-2"
+          >
+            <X className="w-5 h-5" />
+            Cancel Search
+          </button>
+        </div>
       </div>
-      <div className="text-3xl font-extrabold pb-6 my-5">
-        Searching for an opponent
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-900 p-6">
+      <div className="max-w-4xl mx-auto space-y-8">
+        
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-light text-white">Find a Match</h1>
+          <div className="flex items-center justify-center gap-2 text-slate-400">
+            <Users className="w-4 h-4" />
+            <span>{playersOnline.toLocaleString()} players online</span>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8">
+          
+          {/* Time Controls */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-light text-white flex items-center gap-2">
+              <Clock className="w-5 h-5" />
+              Time Control
+            </h2>
+            
+            <div className="grid grid-cols-2 gap-3">
+              {timeControls.map((control) => (
+                <button
+                  key={control.id}
+                  onClick={() => setSelectedTimeControl(control.id)}
+                  className={`
+                    p-4 rounded-xl border transition-all duration-300 text-left
+                    ${selectedTimeControl === control.id 
+                      ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' 
+                      : 'bg-slate-800/30 border-slate-700/30 text-white hover:border-slate-600/50'
+                    }
+                  `}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    {control.icon}
+                    <span className="font-medium">{control.label}</span>
+                  </div>
+                  <div className="text-sm text-slate-400">{control.type}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Rating Range */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-light text-white flex items-center gap-2">
+              <Target className="w-5 h-5" />
+              Rating Range
+            </h2>
+            
+            <div className="space-y-3">
+              {ratingRanges.map((range) => (
+                <button
+                  key={range.id}
+                  onClick={() => setSelectedRating(range.id)}
+                  className={`
+                    w-full p-4 rounded-xl border transition-all duration-300 text-left
+                    ${selectedRating === range.id 
+                      ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' 
+                      : 'bg-slate-800/30 border-slate-700/30 text-white hover:border-slate-600/50'
+                    }
+                  `}
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">{range.label}</span>
+                    <span className="text-sm text-slate-400">{range.range}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Match Settings Summary */}
+        <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/30">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-medium text-white flex items-center gap-2">
+              <Settings className="w-5 h-5" />
+              Match Settings
+            </h3>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-6 text-center">
+            <div>
+              <div className="text-slate-400 text-sm mb-1">Time Control</div>
+              <div className="text-white font-medium">{selectedTimeControl}</div>
+            </div>
+            <div>
+              <div className="text-slate-400 text-sm mb-1">Rating Range</div>
+              <div className="text-white font-medium">{selectedRating}</div>
+            </div>
+            <div>
+              <div className="text-slate-400 text-sm mb-1">Game Type</div>
+              <div className="text-white font-medium">Rated</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Play Button */}
+        <div className="text-center">
+          <button
+            onClick={handleStartSearch}
+            className="bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600 text-white font-medium py-4 px-12 rounded-2xl text-lg transition-all duration-300 hover:scale-105 flex items-center gap-3 mx-auto"
+          >
+            <Play className="w-6 h-6" />
+            Find Match
+          </button>
+        </div>
+
       </div>
     </div>
-  )
+  );
 }
-export default GameArena

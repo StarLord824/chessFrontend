@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router";
+import { authClient } from "../../lib/auth-client";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,14 +24,44 @@ export default function SignupPage() {
     }));
   };
 
+  const handleGoogleSignup = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard"
+    })
+  }
+  const handleDiscordSignup = async () => {
+    await authClient.signIn.social({
+      provider: "discord",
+      callbackURL: "/dashboard"
+    })
+  }
   const handleSubmit = async () => {
     setIsLoading(true);
     
+    await authClient.signUp.email({
+        email: formData.email,
+        password: formData.password,
+        name: formData.firstName+" "+formData.lastName,
+        callbackURL: "/home"
+      },{
+        onError: (error) => {
+          alert(`Error signing up: ${JSON.stringify(error)}`);
+          // setIsLoading(false);
+        },
+        onSuccess: (user) => {
+          console.log(user);
+        },
+        onRequest: () => {
+          console.log("Requesting signup");
+        }
+      }
+    )
     // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      console.log("Signup attempt:", formData);
-    }, 1500);
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   console.log("Signup attempt:", formData);
+    // }, 1500);
   };
 
   return (
@@ -262,10 +293,16 @@ export default function SignupPage() {
 
           {/* Social Signup */}
           <div className="grid grid-cols-2 gap-4">
-            <button className="py-3 px-4 border border-slate-800/50 rounded-full text-white/70 hover:text-white/90 hover:border-slate-700/50 transition-all duration-200 font-light">
+            <button 
+              className="py-3 px-4 border border-slate-800/50 rounded-full text-white/70 hover:text-white/90 hover:border-slate-700/50 transition-all duration-200 font-light"
+              onClick={ handleGoogleSignup }
+            >
               Google
             </button>
-            <button className="py-3 px-4 border border-slate-800/50 rounded-full text-white/70 hover:text-white/90 hover:border-slate-700/50 transition-all duration-200 font-light">
+            <button 
+              className="py-3 px-4 border border-slate-800/50 rounded-full text-white/70 hover:text-white/90 hover:border-slate-700/50 transition-all duration-200 font-light"
+              onClick={ handleDiscordSignup }
+            >
               GitHub
             </button>
           </div>

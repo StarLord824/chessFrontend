@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft, Play } from "lucide-react";
+import { authClient } from "../../lib/auth-client";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,14 +20,40 @@ export default function LoginPage() {
   };
   const navigate = useNavigate();
   
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+    })
+  }
+  const handleDiscordLogin = async () => {
+    await authClient.signIn.social({
+      provider: "discord",
+    })
+  }
   const handleSubmit = async () => {
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      console.log("Login attempt:", formData);
-    }, 1500);
+    //perform login using better-auth-client
+    await authClient.signIn.email({
+      email: formData.email,
+      password: formData.password,
+      callbackURL: "/home"
+    }, {
+      onError: (error) => {
+        alert(`Error logging in: ${error}`);
+      },
+      onSuccess: (user) => {
+        console.log(user);
+      },
+      onRequest: () => {
+        console.log("Requesting login");
+      }
+    })
+    // // Simulate API call
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   console.log("Login attempt:", formData);
+    // }, 1500);
   };
 
   return (
@@ -192,11 +219,17 @@ export default function LoginPage() {
 
           {/* Social Login */}
           <div className="grid grid-cols-2 gap-4">
-            <button className="py-3 px-4 border border-slate-800/50 rounded-full text-white/70 hover:text-white/90 hover:border-slate-700/50 transition-all duration-200 font-light">
+            <button 
+              className="py-3 px-4 border border-slate-800/50 rounded-full text-white/70 hover:text-white/90 hover:border-slate-700/50 transition-all duration-200 font-light"
+              onClick={ handleGoogleLogin }
+            >
               Google
             </button>
-            <button className="py-3 px-4 border border-slate-800/50 rounded-full text-white/70 hover:text-white/90 hover:border-slate-700/50 transition-all duration-200 font-light">
-              GitHub
+            <button 
+              className="py-3 px-4 border border-slate-800/50 rounded-full text-white/70 hover:text-white/90 hover:border-slate-700/50 transition-all duration-200 font-light"
+              onClick={ handleDiscordLogin }
+            >
+              Discord
             </button>
           </div>
 
