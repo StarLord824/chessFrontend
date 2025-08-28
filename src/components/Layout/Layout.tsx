@@ -52,7 +52,14 @@ function Sidebar({
   currentPath: string;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
+  const handleSignOut = () => {
+    // Add your sign out logic here
+    setIsSignedIn(false);
+    navigate("/");
+  };
+  
   return (
     <>
       {/* Mobile Navbar */}
@@ -228,24 +235,38 @@ function Sidebar({
 
         {/* Mobile Auth Buttons */}
         <div className="p-6 space-y-3 border-t border-slate-700/50">
-          <button 
+          { isSignedIn ? <button 
             className="w-full py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg"
             onClick={() => {
+              handleSignOut();
               setMobileOpen(false);
               navigate("/signin");
             }}
           >
-            Login
+            Sign Out
           </button>
-          <button 
-            className="w-full py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white border border-slate-600"
-            onClick={() => {
-              setMobileOpen(false);
-              navigate("/signup");
-            }}
-          >
-            Sign Up
-          </button>
+          :
+          <>
+            <button 
+              className="w-full py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg"
+              onClick={() => {
+                setMobileOpen(false);
+                navigate("/signin");
+              }}
+              >
+              Login
+            </button>
+            <button 
+              className="w-full py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white border border-slate-600"
+              onClick={() => {
+                setMobileOpen(false);
+                navigate("/signup");
+              }}
+              >
+              Sign Up
+            </button>
+          </>
+          }
         </div>
       </div>
 

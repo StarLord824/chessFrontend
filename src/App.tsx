@@ -9,6 +9,7 @@ import Signup from './components/Auth/Signup'
 import Login from './components/Auth/Login'
 import Layout from './components/Layout/Layout'
 import Home from './components/Home'
+import Settings from './components/Landing/Settings'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="dashboard" element={<Home/>}/>
             <Route path="match" element={<GameArena/>}/>
             <Route path="about" element={<About/>}/>
+            <Route path="settings" element={<Settings/>}/>
             {/* Add more routes here as needed */}
           </Route>
           <Route path="/arena" element={<Arena/>}/>
