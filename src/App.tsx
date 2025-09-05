@@ -1,17 +1,23 @@
 // App.tsx
 import './App.css'
 import { Route, BrowserRouter as Router, Routes } from 'react-router'
-import LandingPage from './components/Landing/LandingPage'
-import GameArena from './components/Match/GameArena'
-import { Arena } from './components/Match/Arena'
-import { About } from './components/Landing/About'
-import Signup from './components/Auth/Signup'
-import Login from './components/Auth/Login'
+import LandingPage from './pages/Landing/LandingPage'
+import GameArena from './pages/Match/GameArena'
+import { Arena } from './pages/Match/Arena'
+import { About } from './pages/Landing/About'
+import Signup from './pages/Auth/Signup'
+import Login from './pages/Auth/Login'
 import Layout from './components/Layout/Layout'
-import Home from './components/Home'
-import Settings from './components/Landing/Settings'
+import Home from './pages/Home'
+import Settings from './pages/Landing/Settings'
+import { useUserStore } from './utils/store'
 
 function App() {
+
+  const user = useUserStore( (state)=> {
+    return state
+  })
+
   return (
     <>
       <Router>

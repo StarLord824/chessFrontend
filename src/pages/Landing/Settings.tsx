@@ -23,6 +23,8 @@ import {
   Mail,
 //   Lock
 } from "lucide-react";
+import { useUserStore } from "../../utils/store";
+import { User as UserType } from "../../utils/types";
 
 interface SettingsState {
   // Profile Settings
@@ -206,6 +208,8 @@ export default function Settings() {
 
 // Profile Settings Component
 function ProfileSettings({ settings, updateSetting }: { settings: SettingsState; updateSetting: (key: keyof SettingsState, value: unknown) => void }) {
+
+  const user : UserType = useUserStore.getState();
   return (
     <div className="space-y-8">
       <div>
