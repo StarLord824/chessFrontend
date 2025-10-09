@@ -43,7 +43,7 @@ export default function SignupPage() {
         email: formData.email,
         password: formData.password,
         name: formData.firstName+" "+formData.lastName,
-        callbackURL: "/home"
+        callbackURL: "/home",
       },{
         onError: (error) => {
           alert(`Error signing up: ${JSON.stringify(error)}`);

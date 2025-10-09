@@ -66,12 +66,13 @@ interface SettingsState {
 }
 
 export default function Settings() {
+  const user : UserType = useUserStore.getState();
   const [activeSection, setActiveSection] = useState('profile');
   const [settings, setSettings] = useState<SettingsState>({
     // Profile Settings
-    username: 'ChessPlayer2025',
-    email: 'player@email.com',
-    avatar: '',
+    username: user.username,
+    email: user.email,
+    avatar: user.avatar,
     
     // Game Settings
     timeControl: '10+0',
@@ -208,8 +209,7 @@ export default function Settings() {
 
 // Profile Settings Component
 function ProfileSettings({ settings, updateSetting }: { settings: SettingsState; updateSetting: (key: keyof SettingsState, value: unknown) => void }) {
-
-  const user : UserType = useUserStore.getState();
+  
   return (
     <div className="space-y-8">
       <div>
@@ -222,9 +222,13 @@ function ProfileSettings({ settings, updateSetting }: { settings: SettingsState;
         <div className="mb-8">
           <label className="block text-sm font-medium text-slate-300 mb-4">Profile Picture</label>
           <div className="flex items-center gap-6">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
-              {settings.username.charAt(0).toUpperCase()}
-            </div>
+            { settings.avatar==='' ? 
+                <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
+                  {settings.username.charAt(0).toUpperCase()}
+                </div>
+                :
+                <img src={settings.avatar} alt="avatar" className="w-20 h-20 rounded-full" />
+            }
             <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition-all duration-200">
               <Camera className="w-4 h-4" />
               Change Avatar

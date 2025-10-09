@@ -1,7 +1,7 @@
 // components/Layout/Layout.tsx
 import React, { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { Home, Play, Settings, Info, ChevronLeft, ChevronRight, Menu, X, UserRoundPlus,UserCheck } from "lucide-react";
+import { Home, Play, Settings, Info, ChevronLeft, ChevronRight, Menu, X, UserRoundPlus,UserCheck, UserX } from "lucide-react";
 
 const menuItems = [
   { attribute: "Home", value: "/", icon: <Home className="w-5 h-5" /> },
@@ -56,6 +56,7 @@ function Sidebar({
 
   const handleSignOut = () => {
     // Add your sign out logic here
+    
     setIsSignedIn(false);
     navigate("/");
   };
@@ -157,29 +158,48 @@ function Sidebar({
           
           {/* Auth Buttons */}
           <div className="space-y-3">
-            <button className={`
-              w-full py-3 rounded-xl font-semibold transition-all duration-300
-              bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800
-              text-white shadow-lg hover:shadow-xl hover:shadow-blue-500/20
-              transform hover:scale-105 hover:-translate-y-0.5
-              ${!open && 'px-0'}
-            `}
-              onClick={() => navigate("/signin")}
-            >
-              {open ? "Login" : <UserCheck className="mx-auto"/>}
-            </button>
-            <button className={`
-              w-full py-3 rounded-xl font-semibold transition-all duration-300
-              bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700
-              text-white border border-slate-600 hover:border-slate-500
-              shadow-lg hover:shadow-xl
-              transform hover:scale-105 hover:-translate-y-0.5
-              ${!open && 'px-0'}
-            `}
-              onClick={() => navigate("/signup")}
-            >
-              {open ? "Sign Up" : <UserRoundPlus className="mx-auto"/>}
-            </button>
+            { isSignedIn 
+              ? 
+                  //sign out button
+                <button className={`
+                  w-full py-3 rounded-xl font-semibold transition-all duration-300
+                  bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700
+                  text-white border border-slate-600 hover:border-slate-500
+                  shadow-lg hover:shadow-xl
+                  transform hover:scale-105 hover:-translate-y-0.5
+                  ${!open && 'px-0'}
+                  `}
+                  onClick={ () => handleSignOut() }
+                >
+                  {open ? "Sign Out" : <UserX className="mx-auto"/>}
+                </button>
+              :
+              <>
+                <button className={`
+                  w-full py-3 rounded-xl font-semibold transition-all duration-300
+                  bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800
+                  text-white shadow-lg hover:shadow-xl hover:shadow-blue-500/20
+                  transform hover:scale-105 hover:-translate-y-0.5
+                  ${!open && 'px-0'}
+                  `}
+                  onClick={() => navigate("/signin")}
+                  >
+                  {open ? "Login" : <UserCheck className="mx-auto"/>}
+                </button>
+                <button className={`
+                  w-full py-3 rounded-xl font-semibold transition-all duration-300
+                  bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700
+                  text-white border border-slate-600 hover:border-slate-500
+                  shadow-lg hover:shadow-xl
+                  transform hover:scale-105 hover:-translate-y-0.5
+                  ${!open && 'px-0'}
+                  `}
+                  onClick={() => navigate("/signup")}
+                  >
+                  {open ? "Sign Up" : <UserRoundPlus className="mx-auto"/>}
+                </button>
+              </>
+            }
           </div>
         </div>
       </div>

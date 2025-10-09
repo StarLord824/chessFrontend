@@ -1,7 +1,10 @@
-import { Play, Users } from "lucide-react";
+import { Play} from "lucide-react";
+// import { Users} from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function HeroSection({ navigate }: { navigate: (path: string) => void }) {
+export default function HeroSection() {
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [statsCounter, setStatsCounter] = useState({ players: 0, games: 0, tournaments: 0 });
 
@@ -38,7 +41,7 @@ export default function HeroSection({ navigate }: { navigate: (path: string) => 
           {/* Center-aligned content */}
           <div className="text-center space-y-16">
             
-            {/* Minimal Brand Badge */}
+            {/* Brand Badge */}
             <div 
               className={`
                 inline-flex items-center gap-2 bg-slate-900/40 backdrop-blur-sm 
@@ -72,7 +75,7 @@ export default function HeroSection({ navigate }: { navigate: (path: string) => 
               </div>
             </div>
 
-            {/* Elegant Stats Grid */}
+            {/* Stats Grid */}
             <div 
               className={`
                 max-w-3xl mx-auto transform transition-all duration-1000 delay-600
@@ -126,15 +129,15 @@ export default function HeroSection({ navigate }: { navigate: (path: string) => 
                 </div>
               </button>
 
-              <button className="group px-10 py-4 border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white font-medium rounded-full transition-all duration-300">
+              {/* <button className="group px-10 py-4 border border-slate-700 hover:border-slate-600 text-slate-300 hover:text-white font-medium rounded-full transition-all duration-300">
                 <div className="flex items-center gap-3">
                   <Users className="w-5 h-5 group-hover:scale-105 transition-transform duration-300" />
                   <span>Join Community</span>
                 </div>
-              </button>
+              </button> */}
             </div>
 
-            {/* Minimal Trust Indicators */}
+            {/* Trust Indicators */}
             <div 
               className={`
                 flex items-center justify-center gap-12 pt-16 text-slate-600

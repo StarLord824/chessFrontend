@@ -49,11 +49,6 @@ export default function LoginPage() {
         console.log("Requesting login");
       }
     })
-    // // Simulate API call
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    //   console.log("Login attempt:", formData);
-    // }, 1500);
   };
 
   return (
